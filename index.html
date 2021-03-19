@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset=utf-8 />
+	<title>Map Template Browser Title</title>
+	<meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.css" />
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.1/dist/leaflet.css" />
+	<link href="https://fonts.googleapis.com/css?family=Noto+Sans" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Lora" rel="stylesheet">
+
+	<style>
+		body {
+			margin: 0;
+			padding: 0;
+			background: "Whitesmoke";
+			font-family: "Noto Sans", sans-serif;
+			color: #3d3d3d;
+		}
+
+		h1 {
+			position: absolute;
+			margin-top: 0;
+			top: 10px;
+			left: 45px;
+			font-size: 2em;
+			font-family: "Lora", serif;
+			letter-spacing: .04em;
+			padding: 10px 15px;
+			background: rgba(174, 229, 255);
+			border: 1px solid grey;
+			border-radius: 3px;
+			z-index: 800;
+		}
+
+		h2 {
+			font-family: "Lora", serif;
+			letter-spacing: .04em;
+		}
+
+		#map {
+			position: absolute;
+			top: 0;
+			bottom: 0;
+			width: 100%;
+		}
+
+		section {
+			position: absolute;
+			bottom: 0;
+			left: 10px;
+			width: 280px;
+			margin: 20px auto;
+			padding: 0 15px;
+			background: rgba(255, 255, 255);
+			border: 1px solid grey;
+			border-radius: 4px;
+			z-index: 800;
+		}
+
+		p {
+			font-size: .9em;
+			line-height: 1.5em;
+		}
+
+		a {
+			color: #005daa;
+			text-decoration: none;
+		}
+
+		a:hover {
+			text-decoration: underline;
+		}
+	</style>
+</head>
+
+<body>
+
+	<h1>United States Lyme Disease Cases in 2018.</h1>
+
+	<div id='map'></div>
+
+	<section>
+		<h2>What is Lyme Disease?</h2>
+
+		<p>Vector-borne diseases are becoming more common in the United States as temperatures continue to rise. Lyme disease is transmitted to humans through ticks bites. If left untreated, the infection can spread and wreak havoc on the joints, heart, and nervous system. Check out the link below to learn more about Lyme disease and how you can keep yourself safe. </p>
+
+		</p>
+
+		<p><a href="https://www.cdc.gov/lyme/index.html">Lyme Disease Control & Prevention</a></p>
+		<p>Map created by Luke Bennett</p>
+		<p>Source: Centers for Disease Control and Prevention
+
+	</section>
+
+	<script src="http://code.jquery.com/jquery-3.1.1.min.js"></script>
+	<script src="https://unpkg.com/leaflet@1.0.1/dist/leaflet.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-ajax/2.1.0/leaflet.ajax.min.js"></script>
+
+
+
+	<script>
+
+//options to be used when creating the map
+		var options = {
+			center: [39.5, -95.3],
+			zoom: 4
+		}
+
+//creation of the Leaflet map
+		var map = L.map('map', options);
+
+//request to load basemap
+var Stamen_TonerLite = L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/toner-lite/{z}/{x}/{y}{r}.{ext}', {
+	attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+	subdomains: 'abcd',
+	minZoom: 0,
+	maxZoom: 20,
+	ext: 'png'
+}).addTo(map);
+states=L.geoJson.ajax("assets/data.geojson",{
+attribution: 'Data: CDC, Map: Luke Bennett',
+pointToLayer: function (feature, x){
+	return L.circleMarker(x, {
+		color: '#ff7900',
+		opacity: 1,
+		weight: 2,
+		fillColor: '#ff7900',
+		fillOpacity: .6,
+		radius: calcRadius(feature.properties.estimate)
+
+
+}).on({
+					mouseover: function(e){
+						this.setStyle({color: 'blue',fillColor: 'blue'});
+					},
+
+					mouseout: function(e){
+						this.setStyle({color:'#ff7900', fillColor: '#ff7900'});
+					} })},});
+
+var minValue = .01;
+var minRadius = .1;
+
+function calcRadius(val) {
+	return 1.00 * Math.pow(val/minValue,.5) * minRadius;
+	}
+
+
+states.addTo(map);
+
+L.control.scale({position: 'bottomleft'}).addTo(map);
+
+
+
+	</script>
+
+
+</body>
+
+</html>
