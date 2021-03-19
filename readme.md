@@ -1,4 +1,4 @@
-#### Lab 3: Interactive Thematic Webmap
+#### Lab 4: Interactive Thematic Webmap
 
 <p> This lab involved creating a custom web map in Leaflet with data collected from the Centers for Disease Control and Prevention.
 
